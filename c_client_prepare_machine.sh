@@ -17,22 +17,23 @@ then
     exit 1
 fi
 
-sudo apt-get install git=1:1.9.1-1ubuntu0.8 \
-autoconf=2.69-6 \
-automake=1:1.14.1-2ubuntu1 \
-libtool=2.4.2-1.7ubuntu1 \
-build-essential=11.6ubuntu6 \
-cmake=2.8.12.2-ubuntu3 \
-libssl-dev=1.0.1f-1ubuntu2.26 \
-libcurl4-openssl-dev=7.35.0-1ubuntu2.16 \
-service_uuid-dev=2.20.1-5.1ubuntu20.9 \
-python-dev=2.7.5-5ubuntu3
+apt update
+apt install git \
+autoconf \
+automake \
+libtool \
+build-essential \
+cmake \
+libssl-dev \
+libcurl4-openssl-dev \
+uuid-dev \
+python-dev
 
 cd $PATH
 
 if [ -d "git" ]
 then
-
+    :
 else
     mkdir git
 fi
