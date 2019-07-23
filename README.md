@@ -230,7 +230,6 @@ while( msbClient->dataOutInterfaceFlag == 1){
 ```
 
 After that you can publish events using the provided publish-functions. You must provide client, event id, priority, data or data object, array length, and if you wish, a pointer to a correlation id.
-
 ```
 //publishing an empty event (without actual data)
 //on all publish-functions, you may provide a correlation id over the last parameter
@@ -254,19 +253,19 @@ msbClientPublishComplex(msbClient, "Ev3", HIGH, dataObjectA, NULL);
 //publishing a complex event, providing a json string that defines the event's data object
 char* str2 = "{\"SimpleEv\":{\"myInteger\":150}}";
 msbClientPublishFromString(msbClient, "Ev4", HIGH, str2, NULL);
+```
 
 ### Adding configuration parameters, functions and events during runtime
 
 You can add configuration parameters, function and events at every time. However, you must re-register after adding, so the self-service_description of the client is updated.
-Do so by executing
-
+Do so by calling
 ```
 msbClientRegister(msbClient);
 ```
 
 ### Stopping
 
-Stop the client and its own thread with  
+Stop the client and its own thread with
 ```
 msbClientHaltClientStateMachine(msbClient);
 ```
