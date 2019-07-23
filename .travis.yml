@@ -9,6 +9,6 @@ env:
     - TESTENV_FLOW_URL=https://flow.15xr.msb.oss.cell.vfk.fraunhofer.de/
 
 install:
-- ./c_client_prepare_machine.sh
-- ./c_client_build_cmake.sh
+- ./c_client_prepare_machine.sh -p /home
+- ./c_client_build_cmake.sh -v '1.5.0'
 - ./c_client_get_coverage.sh
