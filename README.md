@@ -160,23 +160,23 @@ Lookup the example.c for an example on how to use those functions.
 //the function must provide two void* parameters. first one will receive either the data object of the function call or the complete function call (depends on your setting)
 void callback_function(void* inp, void* context){
 
-//with msbClientFwdCompleteFunctionCall(msbClient* client)
+    //with msbClientFwdCompleteFunctionCall(msbClient* client)
     json_object* obj = json_object_object_get((json_object*)inp, "functionParameters");
-//without msbClientFwdCompleteFunctionCall(msbClient* client)
+    //without msbClientFwdCompleteFunctionCall(msbClient* client)
     json_object* obj = (json_object*)inp
 
-//if your function's data object consists of a single simple datatype we can directly dissolve the data object, otherwise we must use the json-c-functions to disassemble the function call 
+    //if your function's data object consists of a single simple datatype we can directly dissolve the data object, otherwise we must use the json-c-functions to disassemble the function call 
     int32_t int_obj;
     int_obj = json_object_get_int(json_object_object_get(obj, "dataObject"));
 
-//if your function's data object consists of several entries, an example would be
+    //if your function's data object consists of several entries, an example would be
     int32_t int_obj;
     double d;
     int_obj = json_object_get_int(json_object_object_get(json_object_object_get(obj, "dataObject"), "int"));
     d = json_object_get_double(json_object_object_get(json_object_object_get(obj, "dataObject"), "double"));
 
-//this function call has a response event
-//to use this functionality you must set the calling client as context pointer when adding the function
+    //this function call has a response event
+    //to use this functionality you must set the calling client as context pointer when adding the function
     msbClient* client = (msbClient*)context;
     int resp = 123;
     while( client->dataOutInterfaceFlag == 1){
@@ -193,7 +193,6 @@ To add functions, you must use on of the addfunction-functions
 //empty function (without dataobject). provide client, function id, function service_name, function service_description, pointer to your function, a pointer to context data you want to be given to your function when called
 msbClientAddEmptyFunction(msbClient, "F0", "Function0", "service_description", &testFunctionEmpty, NULL);
 //function with simple dataobject (integer). provide client, function id, function service_name, function service_description, pointer to your function, datatype, data format, array length (0 if no array), a pointer to context data you want to be given to your function when called
-//to the response event functionality you must set the calling client as context pointer when adding the function
 msbClientAddFunction(msbClient, "F1", "Function1", "service_description", &callback_function, MSB_INTEGER, MSB_INT32, 0, msbClient);
 ```
 
