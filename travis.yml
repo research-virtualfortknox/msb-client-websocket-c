@@ -1,0 +1,14 @@
+language: c
+dist: bionic
+sudo: require
+
+env:
+  global:
+    - TESTENV_BROKER_URL=https://ws.15xr.msb.oss.cell.vfk.fraunhofer.de/
+    - TESTENV_SO_URL=https://so.15xr.msb.oss.cell.vfk.fraunhofer.de/
+    - TESTENV_FLOW_URL=https://flow.15xr.msb.oss.cell.vfk.fraunhofer.de/
+
+install:
+- ./c_client_prepare_machine.sh
+- ./c_client_build_cmake.sh
+- ./c_client_get_coverage.sh
