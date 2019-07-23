@@ -1,24 +1,22 @@
-#!/bin/bash
-
-PATH=""
+#!/bin/sh
 
 while getopts ":p:" opt; do
   case $opt in
-    p) PATH="$OPTARG"
+    p) WORKPATH="$OPTARG"
     ;;
-    *) echo "Available parameters: -p (path) Example: -p '/home/ci-vfk'"
+    *) echo "Available parameters: -p (workpath) Example: -p '/home/ci-vfk'"
     ;;
   esac
 done
 
-if [ "$PATH" == '' ]
+if [ "$WORKPATH" = '' ]
 then
-	echo "The path has to be set (use -p option)"
+	echo "The work path has to be set (use -p option)"
     exit 1
 fi
 
 apt update
-apt install git \
+apt --force-yes install git \
 autoconf \
 automake \
 libtool \
@@ -29,7 +27,7 @@ libcurl4-openssl-dev \
 uuid-dev \
 python-dev
 
-cd $PATH
+cd $WORKPATH
 
 if [ -d "git" ]
 then
@@ -75,7 +73,8 @@ cd ..
 
 git clone https://github.com/ASPLes/nopoll.git
 cd nopoll
-git checkout tags/0.4.6
+#git checkout tags/0.4.6
+git checkout master
 sh autogen.sh
 make && sudo make install
 

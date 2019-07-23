@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 VERSION=""
 
@@ -11,7 +11,7 @@ while getopts ":v:" opt; do
   esac
 done
 
-if [ "$VERSION" == '' ]
+if [ "$VERSION" = '' ]
 then
 	echo "The project version has to be set (use -v option)"
     exit 1
@@ -19,7 +19,7 @@ fi
 
 VERSIONSHORT="$(echo $VERSION | grep -o "[0-9]\.[0-9]\.[0-9]")"
 
-if [ "$VERSIONSHORT" == '' ]
+if [ "$VERSIONSHORT" = '' ]
 then
 	echo "The project version $VERSION could not be transformed to a short version number"
     exit 1

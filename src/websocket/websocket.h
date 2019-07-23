@@ -36,13 +36,15 @@ typedef struct {
     char* targetPort;
     char* targetHostname;
     char* targetPath;
+    char* origin;
 } wsConnData;
 
 wsConnData* wsConnDataConstr(bool _useIPv6,
                              char* _targetAddr,
                              char* _targetPort,
                              char* _targetHostname,
-                             char* _targetPath);
+                             char* _targetPath,
+                             char* _origin);
 
 void wsConnDataDestr(wsConnData* prey);
 
@@ -77,6 +79,7 @@ wsData* wsDataConstr(bool _useIPv6,
                      char* _targetPort,
                      char* _targetHostname,
                      char* _targetPath,
+                     char* _origin,
                      bool tls, char* client_cert, char* client_key, char* ca_cert,
                      int (*debugFunction_)(const char*, ...));
 
@@ -107,5 +110,9 @@ int wsTLSCertificates(wsData* data);
 void wsSetTLSVerification(wsData* data, bool on_off);
 
 void wsCleanup();
+
+void logHandler(noPollCtx * ctx, noPollDebugLevel level, const char * log_msg, noPollPtr user_data);
+
+//void setDebugHandling(wsData* data);
 
 #endif /* SRC_WEBSOCKET_H_ */

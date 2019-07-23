@@ -201,8 +201,7 @@ static void test_helper_schll(){
 
 static void test_initialisation(){
     //test_var_msbClient = msbClientNewClientURL(test_var_websocketAdress, test_var_UUID, test_var_TOKEN, test_var_CLASS, test_var_NAME, test_var_DESCRIPTION, 0, NULL, NULL, NULL);
-    test_var_msbClient = msbClientNewClientURL("ws://127.0.0.1:8085", test_var_UUID, test_var_TOKEN, test_var_CLASS, test_var_NAME, test_var_DESCRIPTION, 0, NULL, NULL, NULL);
-    //test_var_msbClient = msbClientNewClientURL("ws://msb.ipa.cell.vfk.fraunhofer.de", test_var_UUID, test_var_TOKEN, test_var_CLASS, test_var_NAME, test_var_DESCRIPTION, 0, NULL, NULL, NULL);
+    test_var_msbClient = msbClientNewClientURL("ws://127.0.0.1:8085", NULL, test_var_UUID, test_var_TOKEN, test_var_CLASS, test_var_NAME, test_var_DESCRIPTION, 0, NULL, NULL, NULL);
 
     msbClientSetDebug(test_var_msbClient, true);
     msbClientSetDebugFunction(test_var_msbClient, &writeDebug);
@@ -970,8 +969,6 @@ int test(bool unit_tests, bool integration_tests, char* websocketAdress, char* r
         sput_run_test(test_string_functions);
         sput_run_test(test_initialisation);
 
-        //wsData* ws = (wsData*) test_var_msbClient->websocketData;
-
         sput_run_test(test_adding_config_parameters);
         sput_run_test(test_adding_events);
         sput_run_test(test_adding_functions);
@@ -984,11 +981,18 @@ int test(bool unit_tests, bool integration_tests, char* websocketAdress, char* r
     }
 
     if(integration_tests){
-        msbClientChangeURL(test_var_msbClient, test_var_websocketAdress, 0, NULL, NULL, NULL);
-        //msbClientChangeURL(test_var_msbClient, "http://ws.msb.ipa.cell.vfk.fraunhofer.de", false, NULL, NULL, NULL);
+        sput_enter_suite("MSB.Client.Websocket.C.Test.Integration");
+
+        if(!unit_tests){
+            sput_run_test(test_initialisation);
+            sput_run_test(test_adding_config_parameters);
+            sput_run_test(test_adding_events);
+            sput_run_test(test_adding_functions);
+        }
+
+        msbClientChangeURL(test_var_msbClient, test_var_websocketAdress, test_var_websocketAdress, true, NULL, NULL, NULL);
         msbClientGenerateSockJSPath(test_var_msbClient);
 
-        sput_enter_suite("MSB.Client.Websocket.C.Test.Integration");
         sput_run_test(test_start_client);
 
         sleep(3);

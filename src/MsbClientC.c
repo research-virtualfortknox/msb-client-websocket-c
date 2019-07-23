@@ -923,7 +923,7 @@ if(dwWaitResult == WAIT_OBJECT_0){
 #endif
 }
 
-msbClient* msbClientNewClientURL(char* url, char* uuid, char* token, char* service_class, char* name,
+msbClient* msbClientNewClientURL(char* url, char* origin, char* uuid, char* token, char* service_class, char* name,
                                  char* description,
                                  bool tls, char* client_cert, char* client_key, char* ca_cert) {
 
@@ -949,7 +949,7 @@ msbClient* msbClientNewClientURL(char* url, char* uuid, char* token, char* servi
     char* port = getPort(url, stdPort);
     char* path = getPath(url, stdPath);
 
-    msbClient* ret = msbClientNewClient(0, address, port, address, path, uuid, token, service_class,
+    msbClient* ret = msbClientNewClient(0, address, port, address, path, origin, uuid, token, service_class,
                                         name,
                                         description, tls, client_cert, client_key, ca_cert);
 
@@ -970,7 +970,7 @@ msbClient* msbClientNewClientURL(char* url, char* uuid, char* token, char* servi
 
 }
 
-msbClient* msbClientNewClient(bool ipv6, char* address, char* port, char* hostname, char* path,
+msbClient* msbClientNewClient(bool ipv6, char* address, char* port, char* hostname, char* path, char* origin,
                               char* uuid, char* token, char* service_class, char* name,
                               char* description,
                               bool tls, char* client_cert, char* client_key, char* ca_cert) {
@@ -1008,7 +1008,7 @@ msbClient* msbClientNewClient(bool ipv6, char* address, char* port, char* hostna
     ret->debug = 0;
     ret->debugFunction = &printf;
 
-    ret->websocketData = wsDataConstr(ipv6, address, port, hostname, path, tls, client_cert,
+    ret->websocketData = wsDataConstr(ipv6, address, port, hostname, path, origin, tls, client_cert,
                                       client_key, ca_cert, ret->debugFunction);
 
     wsData* wsdebug = ret->websocketData;
@@ -1040,7 +1040,7 @@ void msbClientDeleteClient(msbClient* client) {
     free(client);
 }
 
-void msbClientChangeURL(msbClient* client, char* url, bool tls, char* client_cert, char* client_key, char* ca_cert){
+void msbClientChangeURL(msbClient* client, char* url, char* origin, bool tls, char* client_cert, char* client_key, char* ca_cert){
 
     if (client == NULL) return;
 
@@ -1049,7 +1049,7 @@ void msbClientChangeURL(msbClient* client, char* url, bool tls, char* client_cer
 
     char* stdProt = "ws";
     char* stdAdr = NULL;
-    char* stdPort;
+    char* stdPort = NULL;
     char* stdPath = "/websocket/data/websocket";
 
     char* proto = getProtocol(url, stdProt);
@@ -1072,7 +1072,7 @@ void msbClientChangeURL(msbClient* client, char* url, bool tls, char* client_cer
     //wsData* ws = wsDataConstr(0, address, port, address, path, tls, client_cert,
            //                    client_key, ca_cert, client->debugFunction);
 
-    client->websocketData = wsDataConstr(0, address, port, address, path, tls, client_cert,
+    client->websocketData = wsDataConstr(0, address, port, address, path, origin, tls, client_cert,
                                          client_key, ca_cert, client->debugFunction);
 
     if (stdProt != NULL)
@@ -1089,13 +1089,13 @@ void msbClientChangeURL(msbClient* client, char* url, bool tls, char* client_cer
             free(path);
 }
 
-void msbClientChangeAddress(msbClient* client, bool ipv6, char* address, char* port, char* hostname, char* path, bool tls, char* client_cert, char* client_key, char* ca_cert){
+void msbClientChangeAddress(msbClient* client, bool ipv6, char* address, char* port, char* hostname, char* path, char* origin, bool tls, char* client_cert, char* client_key, char* ca_cert){
 
     if (client == NULL) return;
 
     wsDataDestr(client->websocketData);
 
-    client->websocketData = wsDataConstr(ipv6, address, port, hostname, path, tls, client_cert,
+    client->websocketData = wsDataConstr(ipv6, address, port, hostname, path, origin, tls, client_cert,
                                          client_key, ca_cert, client->debugFunction);
 
 }

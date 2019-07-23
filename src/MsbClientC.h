@@ -473,6 +473,7 @@ typedef struct {
  * @brief Create an Msb client
  *
  * @param url URL to MSB
+ * @param origin for websocket header, usually NULL is okay
  * @param uuid Service UUID
  * @param token Service token
  * @param service_class Service class ("Application" or "Smart Object")
@@ -485,7 +486,7 @@ typedef struct {
  *
  * @return Created client
  */
-msbClient* msbClientNewClientURL(char* url, char* uuid, char* token, char* service_class, char* name,
+msbClient* msbClientNewClientURL(char* url, char* origin, char* uuid, char* token, char* service_class, char* name,
 								  char* description,
 								  bool tls, char* client_cert, char* client_key, char* ca_cert);
 
@@ -506,11 +507,11 @@ msbClient* msbClientNewClientURL(char* url, char* uuid, char* token, char* servi
  * @param port MSB port
  * @param hostname MSB hostname (use either targetAddr or targetHostname)
  * @param path MSB path
+ * @param origin for websocket header, usually NULL is okay
  *
  * @return Created client
  */
-msbClient* msbClientNewClient(bool ipv6, char* address, char* port, char* hostname,
-							   char* path,
+msbClient* msbClientNewClient(bool ipv6, char* address, char* port, char* hostname, char* path, char* origin,
 							   char* uuid, char* token, char* service_class, char* name, char* description,
 							   bool tls, char* client_cert, char* client_key, char* ca_cert);
 
@@ -526,12 +527,13 @@ void msbClientDeleteClient(msbClient* client);
  *
  * @param client Pointer to Msb client
  * @param url URL to MSB
+ * @param origin for websocket header, usually NULL is okay
  * @param tls Use tls
  * @param client_cert Path to client certificate
  * @param client_key Path to client key
  * @param ca_cert  Path to ca certificate
  */
-void msbClientChangeURL(msbClient* client, char* url, bool tls, char* client_cert, char* client_key, char* ca_cert);
+void msbClientChangeURL(msbClient* client, char* url, char* origin, bool tls, char* client_cert, char* client_key, char* ca_cert);
 
 /**
  * @brief Change the target address of an existing Msb Client
@@ -542,12 +544,13 @@ void msbClientChangeURL(msbClient* client, char* url, bool tls, char* client_cer
  * @param port MSB port
  * @param hostname MSB hostname (use either targetAddr or targetHostname)
  * @param path MSB path
+ * @param origin for websocket header, usually NULL is okay
  * @param tls Use tls
  * @param client_cert Path to client certificate
  * @param client_key Path to client key
  * @param ca_cert  Path to ca certificate
  */
-void msbClientChangeAddress(msbClient* client, bool ipv6, char* address, char* port, char* hostname, char* path, bool tls, char* client_cert, char* client_key, char* ca_cert);
+void msbClientChangeAddress(msbClient* client, bool ipv6, char* address, char* port, char* hostname, char* path, char* origin, bool tls, char* client_cert, char* client_key, char* ca_cert);
 
 /**
  * @brief Use a SockJS-compatible path when connecting

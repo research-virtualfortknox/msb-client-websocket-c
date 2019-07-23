@@ -23,11 +23,17 @@
 
 #include "websocket.h"
 
+void logHandler(noPollCtx * ctx, noPollDebugLevel level, const char * log_msg, noPollPtr user_data){
+    wsData* ws = (wsData*)user_data;
+    if (ws->debugFunction != NULL) ws->debugFunction("Redirected libnopoll msg: %s\n", log_msg);
+}
+
 wsConnData* wsConnDataConstr(bool _useIPv6,
                              char* _targetAddr,
                              char* _targetPort,
                              char* _targetHostname,
-                             char* _targetPath) {
+                             char* _targetPath,
+                             char* _origin) {
 
     wsConnData* ret = (wsConnData*) calloc(1, 1 * sizeof(wsConnData));
 
@@ -37,6 +43,7 @@ wsConnData* wsConnDataConstr(bool _useIPv6,
     if (_targetPort != NULL) ret->targetPort = string_duplicate(_targetPort);
     if (_targetHostname != NULL) ret->targetHostname = string_duplicate(_targetHostname);
     if (_targetPath != NULL) ret->targetPath = string_duplicate(_targetPath);
+    if (_origin != NULL) ret->origin = string_duplicate(_origin);
 
     return ret;
 }
@@ -48,6 +55,7 @@ void wsConnDataDestr(wsConnData* prey) {
     free(prey->targetPort);
     free(prey->targetHostname);
     free(prey->targetPath);
+    free(prey->origin);
 
     free(prey);
 }
@@ -57,6 +65,7 @@ wsData* wsDataConstr(bool _useIPv6,
                      char* _targetPort,
                      char* _targetHostname,
                      char* _targetPath,
+                     char* _origin,
                      bool tls, char* client_cert, char* client_key, char* ca_cert,
                      int (* debugFunction_)(const char*, ...)) {
 
@@ -64,12 +73,12 @@ wsData* wsDataConstr(bool _useIPv6,
 
     ret->status = WSD_CLEAR;
 
-    ret->flag_TLS = (tls != 0);
+    ret->flag_TLS = tls;
     if (ca_cert != NULL) ret->tls_ca_cert = string_duplicate(ca_cert);
     if (client_cert != NULL) ret->tls_client_cert = string_duplicate(client_cert);
     if (client_key != NULL) ret->tls_client_key = string_duplicate(client_key);
 
-    ret->connData = wsConnDataConstr(_useIPv6, _targetAddr, _targetPort, _targetHostname, _targetPath);
+    ret->connData = wsConnDataConstr(_useIPv6, _targetAddr, _targetPort, _targetHostname, _targetPath, _origin);
     ret->debugFunction = debugFunction_;
 
     return ret;
@@ -124,22 +133,22 @@ void wsConnect(wsData* data) {
         if (data->connData->useIPv6) {
             data->wsVerb = (noPollConn*) nopoll_conn_new6(data->wsCtx, data->connData->targetAddr,
                                                           data->connData->targetPort, data->connData->targetHostname,
-                                                          data->connData->targetPath, NULL, NULL);
+                                                          data->connData->targetPath, NULL, data->connData->origin);
         } else {
             data->wsVerb = (noPollConn*) nopoll_conn_new(data->wsCtx, data->connData->targetAddr,
                                                          data->connData->targetPort, data->connData->targetHostname,
-                                                         data->connData->targetPath, NULL, NULL);
+                                                         data->connData->targetPath, NULL, data->connData->origin);
         }
     } else {
         if (data->connData->useIPv6) {
             data->wsVerb = (noPollConn*) nopoll_conn_tls_new6(data->wsCtx, data->wsOpts, data->connData->targetAddr,
                                                               data->connData->targetPort,
                                                               data->connData->targetHostname,
-                                                              data->connData->targetPath, NULL, NULL);
+                                                              data->connData->targetPath, NULL, data->connData->origin);
         } else {
             data->wsVerb = (noPollConn*) nopoll_conn_tls_new(data->wsCtx, data->wsOpts, data->connData->targetAddr,
                                                              data->connData->targetPort, data->connData->targetHostname,
-                                                             data->connData->targetPath, NULL, NULL);
+                                                             data->connData->targetPath,  NULL, data->connData->origin);
         }
     }
 
@@ -166,6 +175,11 @@ void wsInitialise(wsData* data) {
     data->wsCtx = nopoll_ctx_new();
 
     if (data->flag_TLS) wsTLSInitialise(data);
+
+#if NOPOLLDEBUG
+    nopoll_log_set_handler(data->wsCtx, &logHandler, data);
+    nopoll_log_enable(data->wsCtx, true);
+#endif
 
     data->status = WSD_INITIALISED;
 }
@@ -256,7 +270,7 @@ void wsSetTLSVerification(wsData* data, bool on_off) {
     if (data->debugFunction != NULL) data->debugFunction("Websocket: wsSetTLSVerification: on_off %b\n", on_off);
 
     /*true für deaktivieren, false für aktivieren*/
-    nopoll_conn_opts_ssl_peer_verify(data->wsOpts, (nopoll_bool) ((on_off - 1) * -1));
+    nopoll_conn_opts_ssl_peer_verify(data->wsOpts, !on_off);
 }
 
 void wsCleanup() {
