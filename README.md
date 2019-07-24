@@ -4,7 +4,11 @@
   </a>
 </p>
 
+
+
 # MSB websocket client library for C and C++
+
+[![Build Status](https://travis-ci.org/research-virtualfortknox/msb-client-websocket-c.svg?branch=master)](https://travis-ci.org/research-virtualfortknox/msb-client-websocket-c)
 
 **Compatibility Matrix**
 
