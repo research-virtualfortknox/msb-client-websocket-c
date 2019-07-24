@@ -15,8 +15,8 @@ then
     exit 1
 fi
 
-apt update
-apt --force-yes install git \
+sudo apt update
+sudo apt --yes install git \
 autoconf \
 automake \
 libtool \
