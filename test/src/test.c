@@ -22,6 +22,7 @@
 #include "libMsbClientC.h"
 #include "rest.c"
 #include "sput-1.4.0/sput.h"
+#include "integration_flow.h"
 
 static FILE* debug_fPtr = NULL;
 static const char* debug_fName = "debugOutput";
@@ -797,7 +798,7 @@ static void test_create_integration_flow(){
 
     FILE *fptr;
 
-    if ((fptr = fopen("integration_flow.json","r")) == NULL){
+    /*if ((fptr = fopen("integration_flow.json","r")) == NULL){
         printf("Error! opening file");
     }else{
         char tmp[10240] = {0};
@@ -808,7 +809,7 @@ static void test_create_integration_flow(){
         fseek(fptr, 0, SEEK_SET);  //same as rewind(f);
 
         fread(tmp, fsize, 1, fptr);
-        fclose(fptr);
+        fclose(fptr);*/
 
         char* post;
 
@@ -818,7 +819,8 @@ static void test_create_integration_flow(){
 
         int i = 0;
         for(; i < 3 && r != 201; ++i){
-            r = rest_post(url, tmp, &post, "accept: application/json", "Content-Type: application/json", "TEST: create_integration_flow");
+            //r = rest_post(url, tmp, &post, "accept: application/json", "Content-Type: application/json", "TEST: create_integration_flow");
+            r = rest_post(url, (char*)integration_flow, &post, "accept: application/json", "Content-Type: application/json", "TEST: create_integration_flow");
             if(r != 201)
                 sleep(5);
         }
@@ -832,7 +834,7 @@ static void test_create_integration_flow(){
                     test_var_integration_flow_id = json_object_get_int(j_resp_i);
             }
         }
-    }
+    //}
 
     sput_fail_unless(r == 201, "Integration flow created");
     sput_fail_unless(test_var_integration_flow_id != -1, "Integration flow read");
