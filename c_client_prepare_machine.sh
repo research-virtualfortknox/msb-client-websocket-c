@@ -25,7 +25,8 @@ cmake \
 libssl-dev \
 libcurl4-openssl-dev \
 uuid-dev \
-python-dev
+python-dev \
+lcov
 
 cd $WORKPATH
 
