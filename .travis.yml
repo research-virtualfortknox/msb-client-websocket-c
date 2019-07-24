@@ -15,4 +15,4 @@ install:
 script: ./test/cmake-build-debug/MsbClientC_Test --tests -w TESTENV_BROKER_URL -r_sm TESTENV_SO_URL -r_int TESTENV_FLOW_URL
 after_success:
   - ./c_client_get_coverage.sh
-  - bash <(curl -s https://codecov.io/bash) -t c554faab-db78-41a2-be1f-18ecd1851568
+  - bash <(curl -s https://codecov.io/bash) -f test/cmake-build-debug/CMakeFiles/MsbClientC_Test.dir/src/ex_test2.info -t c554faab-db78-41a2-be1f-18ecd1851568

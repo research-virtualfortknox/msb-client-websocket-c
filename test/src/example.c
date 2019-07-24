@@ -112,9 +112,9 @@ void testFunctionFromString(void* client, void* inp, void* context){
 
 int main(int argc, char **argv){
 
-    msbClient* msbClient = msbClientNewClientURL("http://ws.msb.ipa.cell.vfk.fraunhofer.de", UUID, TOKEN, CLASS, NAME, DESCRIPTION, false, NULL, NULL, NULL);
+    msbClient* msbClient = msbClientNewClientURL("http://ws.msb.ipa.cell.vfk.fraunhofer.de", NULL, UUID, TOKEN, CLASS, NAME, DESCRIPTION, false, NULL, NULL, NULL);
 
-    msbClientChangeURL(msbClient, "http://ws.msb.ipa.cell.vfkl.fraunhofer.de", false, NULL, NULL, NULL);
+    msbClientChangeURL(msbClient, "http://ws.msb.ipa.cell.vfkl.fraunhofer.de", NULL, false, NULL, NULL, NULL);
 
     msbClientGenerateSockJSPath(msbClient);
 
