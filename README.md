@@ -61,7 +61,7 @@ You must provide
 * address parameters (either url (msbClientNewClientURL) OR ((ip-address  (msbClientNewClient) OR hostname (msbClientNewClient)) AND port. Path only if it's necessary for the targeted MSB instance, otherwise insert NULL),
 * connection parameters (IPv6? TLS on/off? Certificates for TLS?)
 
-```
+```c
 #define UUID "cde99fb5-32e1-4f1e-b358-b743b2e4a779"
 #define NAME "c-client"
 #define DESCRIPTION "a service_description"
@@ -82,22 +82,22 @@ msbClient* msbClient = msbClientNewClientURL( false, "10.3.2.123", "8085", NULL,
 ## Configuring the client
 
 Usually, the MSB requires a SockJS format path, which you can generate by executing
-```
+```c
 msbClientGenerateSockJSPath(msbClient);
 ```
 
 Activating debug output  (printf is the standard output function)
-```
+```c
 msbClientSetDebug(msbClient, true);
 ```
 
 You can redirect your debug output by pointing to your own output function
-```
+```c
 void msbClientSetDebugFunction(msbClient* client, int (*function)(const char*, ...));
 ```
 
 To receive the complete function call data, when one of your service's functions is called, set
-```
+```c
 msbClientFwdCompleteFunctionCall(msbClient);
 ```
 Otherwise your function will only receive the data object part of the function call (which means no service_uuid and no correlation id information).
@@ -105,7 +105,7 @@ Otherwise your function will only receive the data object part of the function c
 ## Adding configuration parameters
 
 You can add configuration parameters to your self-service_description by using the msbClientAddConfigParam function. The client will not copy the variable. When the client receives new parameter data from the MSB, it will change the variable's content you're pointing to.
-```
+```c
 int bl = 0;
 msbClientAddConfigParam(msbClient, "p6", MSB_BOOL, MSB_NONE, &bl);
 
@@ -127,20 +127,20 @@ msbClientAddConfigParam(msbClient, "p5", MSB_NUMBER, MSB_DOUBLE, &d);
 ```
 
 You can also add configuration parameters via json string or json object. String or object must provide service_name, type, format and value of a configuration parameter.
-```
+```c
 void msbClientAddConfigParamFromObject(msbClient* client, json_object* object);
 void msbClientAddConfigParamFromString(msbClient* client, char* string);
 ```
 
 To manually change a configuration parameters value, use
-```
+```c
 void msbClientChangeConfigParamValue(msbClient* client, char* cpName, void* value);
 ```
 
 ## Adding events
 
 To add events, you must use on of the addevent-functions
-```
+```c
 //adding an empty event without a dataobject. Provide client, event id, event service_name, event service_description
 msbClientAddEmptyEvent(msbClient, "Ev0", "Event0", "beschreibung");
 //adding an simple event with a single integer as dataobject. Provide client, event id, event service_name, event service_description, data type, data format, array flag
@@ -150,7 +150,7 @@ msbClientAddEvent(msbClient, "Ev2", "Event2", "beschreibung", MSB_STRING, MSB_NO
 ```
 
 To add events with a complex data structure, you may use
-```
+```c
 void msbClientAddEventFromString(msbClient* client, char* eId, char* eName, char* eDesc, char* eFormat, bool isArray);
 void msbClientAddComplexEvent(msbClient* client, char* eId, char* eName, char* eDesc, json_object* eFormat, bool isArray);
 ```
@@ -160,7 +160,7 @@ Lookup the example.c for an example on how to use those functions.
 
 ### Implementing the callback function
 
-```
+```c
 //the function must provide two void* parameters. first one will receive either the data object of the function call or the complete function call (depends on your setting)
 void callback_function(void* inp, void* context){
 
@@ -193,7 +193,7 @@ void callback_function(void* inp, void* context){
 ### Adding the callback function to the self-service_description
 
 To add functions, you must use on of the addfunction-functions
-```
+```c
 //empty function (without dataobject). provide client, function id, function service_name, function service_description, pointer to your function, a pointer to context data you want to be given to your function when called
 msbClientAddEmptyFunction(msbClient, "F0", "Function0", "service_description", &testFunctionEmpty, NULL);
 //function with simple dataobject (integer). provide client, function id, function service_name, function service_description, pointer to your function, datatype, data format, array length (0 if no array), a pointer to context data you want to be given to your function when called
@@ -201,14 +201,14 @@ msbClientAddFunction(msbClient, "F1", "Function1", "service_description", &callb
 ```
 
 To add functions with a complex data structure, you may use
-```
+```c
 void msbClientAddFunctionFromString(msbClient* client, char* fId, char* fName, char* fDesc, void(* fPtr)(void*, void*), char* fFormat, void* contextPtr);
 void msbClientAddComplexFunction(msbClient* client, char* fId, char* fName, char* fDesc, void(* fPtr)(void*, void*), json_object* fFormat, void* contextPtr);
 ```
 Lookup the example.c for an example on how to use those functions.
 
 If you want to publish a response event on a function call, you must add this to the service's self service_description using
-```
+```c
 //provide client, function id and event id (= will be added as response event to the service_description of the function)
 msbClientAddResponseEventToFunction(msbClient, "F1", "Ev1");
 ```
@@ -219,7 +219,7 @@ You can add several response events to one function.
 ### Starting
 
 Start the client in an own thread with  
-```
+```c
 msbClientRunClientStateMachine(msbClient);
 ```
 
@@ -227,14 +227,14 @@ msbClientRunClientStateMachine(msbClient);
 
 First, you should look up whether the client's state machine already picked up your last event or not
 
-```
+```c
 while( msbClient->dataOutInterfaceFlag == 1){
   usleep(50000);
 }
 ```
 
 After that you can publish events using the provided publish-functions. You must provide client, event id, priority, data or data object, array length, and if you wish, a pointer to a correlation id.
-```
+```c
 //publishing an empty event (without actual data)
 //on all publish-functions, you may provide a correlation id over the last parameter
 msbClientPublishEmpty(msbClient, "Ev0", HIGH, NULL);
@@ -263,13 +263,13 @@ msbClientPublishFromString(msbClient, "Ev4", HIGH, str2, NULL);
 
 You can add configuration parameters, function and events at every time. However, you must re-register after adding, so the self-service_description of the client is updated.
 Do so by calling
-```
+```c
 msbClientRegister(msbClient);
 ```
 
 ### Stopping
 
 Stop the client and its own thread with
-```
+```c
 msbClientHaltClientStateMachine(msbClient);
 ```
