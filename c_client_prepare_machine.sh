@@ -72,7 +72,8 @@ make && sudo make install
 
 cd ..
 
-git clone https://github.com/ASPLes/nopoll.git
+#git clone https://github.com/ASPLes/nopoll.git
+git clone https://github.com/research-virtualfortknox/nopoll.git
 cd nopoll
 #git checkout tags/0.4.6
 git checkout master
