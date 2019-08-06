@@ -167,6 +167,8 @@ void wsDisconnect(wsData* data) {
     data->status = WSD_DISCONNECTED;
 }
 
+//#define NOPOLLDEBUG
+
 void wsInitialise(wsData* data) {
     //if (data->status != WSD_CLEAR) return;
 
@@ -176,7 +178,7 @@ void wsInitialise(wsData* data) {
 
     if (data->flag_TLS) wsTLSInitialise(data);
 
-#if NOPOLLDEBUG
+#ifdef NOPOLLDEBUG
     nopoll_log_set_handler(data->wsCtx, &logHandler, data);
     nopoll_log_enable(data->wsCtx, true);
 #endif

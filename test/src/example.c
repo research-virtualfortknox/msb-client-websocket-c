@@ -112,9 +112,11 @@ void testFunctionFromString(void* client, void* inp, void* context){
 
 int main(int argc, char **argv){
 
-    msbClient* msbClient = msbClientNewClientURL("http://ws.msb.ipa.cell.vfk.fraunhofer.de", NULL, UUID, TOKEN, CLASS, NAME, DESCRIPTION, false, NULL, NULL, NULL);
+    msbClient* msbClient = msbClientNewClient(false, "10.15.26.11", "8085", NULL, "/websocket/data/websocket", NULL, UUID, TOKEN, CLASS, NAME, DESCRIPTION, false, NULL, NULL, NULL);
 
-    msbClientChangeURL(msbClient, "http://ws.msb.ipa.cell.vfkl.fraunhofer.de", NULL, false, NULL, NULL, NULL);
+    //msbClient* msbClient = msbClientNewClientURL("http://ws.msb.ipa.cell.vfk.fraunhofer.de", NULL, UUID, TOKEN, CLASS, NAME, DESCRIPTION, false, NULL, NULL, NULL);
+
+    //msbClientChangeURL(msbClient, "http://ws.msb.ipa.cell.vfkl.fraunhofer.de", NULL, false, NULL, NULL, NULL);
 
     msbClientGenerateSockJSPath(msbClient);
 
@@ -307,7 +309,7 @@ int main(int argc, char **argv){
 
     msbClientRunClientStateMachine(msbClient); //automat in thread
 
-    usleep(1000000);
+    usleep(10000000);
 
     unsigned int i = 0;
     for(; i < 50; i++){
