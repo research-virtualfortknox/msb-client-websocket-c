@@ -28,6 +28,13 @@ uuid-dev \
 python-dev \
 lcov
 
+if [ -d $WORKPATH ]
+then
+    :
+else
+    mkdir $WORKPATH
+fi
+
 cd $WORKPATH
 
 if [ -d "git" ]
