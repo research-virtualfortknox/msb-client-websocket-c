@@ -175,6 +175,9 @@ void wsInitialise(wsData* data) {
     if (data->debugFunction != NULL) data->debugFunction("Websocket: wsInitialise\n");
 
     data->wsCtx = nopoll_ctx_new();
+    data->wsOpts = nopoll_conn_opts_new();
+
+    if (!data->connData->origin) nopoll_conn_opts_add_origin_header (data->wsOpts, nopoll_false);
 
     if (data->flag_TLS) wsTLSInitialise(data);
 
@@ -249,7 +252,7 @@ int wsIsConnectionOK(wsData* data) {
 void wsTLSInitialise(wsData* data) {
     if (data->debugFunction != NULL) data->debugFunction("Websocket: wsTLSInitialise\n");
 
-    data->wsOpts = nopoll_conn_opts_new();
+    //data->wsOpts = nopoll_conn_opts_new();
 #ifndef _WIN32
     nopoll_conn_opts_set_ssl_protocol(data->wsOpts, NOPOLL_METHOD_TLSV1_2);
 #else
