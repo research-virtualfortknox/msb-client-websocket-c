@@ -442,6 +442,7 @@ typedef struct {
 	void (*configParamFunction)(void*, void*);/**< pointer for callback function for configuration parameter changes */
 
 	void* websocketData;/**< websocket connection data */
+	bool nopoll_debug;/**< flag for activating debug information of websocket library */
 
 	msbObject* msbObjectData;/**< service data */
 
@@ -599,8 +600,9 @@ bool msbClientAssignTLSCerts(msbClient* client, const char* client_cert, const c
  * @brief Initialise Msb client
  *
  * @param client Pointer to Msb client
+ * @param nopoll_debug Flag for activating debug information of websocket library
  */
-void msbClientInitialise(msbClient* client);
+void msbClientInitialise(msbClient* client, bool nopoll_debug);
 
 /**
  * @brief Connect to Msb

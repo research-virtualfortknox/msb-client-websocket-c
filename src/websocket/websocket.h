@@ -93,7 +93,7 @@ void wsConnect(wsData* data);
 
 void wsDisconnect(wsData* data);
 
-void wsInitialise(wsData* data);
+void wsInitialise(wsData* data, bool nopoll_debug);
 
 void wsDeinitialise(wsData* data);
 

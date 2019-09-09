@@ -756,7 +756,7 @@ void msbClientAutomatThread(msbClient* client) {
         switch (client->currentStatusAutomat) {
             case CREATED: {
                 client->currentStatusAutomat = INITIALISED;
-                msbClientInitialise(client);
+                msbClientInitialise(client, client->nopoll_debug);
                 usleep(1000000);
                 break;
             }
@@ -1011,6 +1011,8 @@ msbClient* msbClientNewClient(bool ipv6, char* address, char* port, char* hostna
     ret->websocketData = wsDataConstr(ipv6, address, port, hostname, path, origin, tls, client_cert,
                                       client_key, ca_cert, ret->debugFunction);
 
+    ret->nopoll_debug = false;
+
     wsData* wsdebug = ret->websocketData;
 
 #ifndef _WIN32
@@ -1179,9 +1181,9 @@ bool msbClientAssignTLSCerts(msbClient* client, const char* client_certificate, 
     return true;
 }
 
-void msbClientInitialise(msbClient* client) {
+void msbClientInitialise(msbClient* client, bool nopoll_debug) {
     wsData* data = (wsData*) client->websocketData;
-    wsInitialise(data);
+    wsInitialise(data, nopoll_debug);
 }
 
 void msbClientConnect(msbClient* client) {

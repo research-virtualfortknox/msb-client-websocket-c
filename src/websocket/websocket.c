@@ -167,9 +167,9 @@ void wsDisconnect(wsData* data) {
     data->status = WSD_DISCONNECTED;
 }
 
-//#define NOPOLLDEBUG
+#define NOPOLLDEBUG
 
-void wsInitialise(wsData* data) {
+void wsInitialise(wsData* data, bool nopoll_debug) {
     //if (data->status != WSD_CLEAR) return;
 
     if (data->debugFunction != NULL) data->debugFunction("Websocket: wsInitialise\n");
@@ -181,10 +181,12 @@ void wsInitialise(wsData* data) {
 
     if (data->flag_TLS) wsTLSInitialise(data);
 
-#ifdef NOPOLLDEBUG
-    nopoll_log_set_handler(data->wsCtx, &logHandler, data);
-    nopoll_log_enable(data->wsCtx, true);
-#endif
+//#ifdef NOPOLLDEBUG
+    if(nopoll_debug){
+        nopoll_log_set_handler(data->wsCtx, &logHandler, data);
+        nopoll_log_enable(data->wsCtx, true);
+    }
+//#endif
 
     data->status = WSD_INITIALISED;
 }
