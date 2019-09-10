@@ -992,8 +992,11 @@ int test(bool unit_tests, bool integration_tests, char* websocketAdress, char* r
             sput_run_test(test_adding_functions);
         }
 
-	/* msbClientChangeURL(test_var_msbClient, test_var_websocketAdress, test_var_websocketAdress, true, NULL, NULL, NULL); mit Origin */
-        msbClientChangeURL(test_var_msbClient, test_var_websocketAdress, NULL, true, NULL, NULL, NULL);
+	    bool tls = false;
+	    if(!strncmp(test_var_websocketAdress, "wss", 3) || !strncmp(test_var_websocketAdress, "https", 5)) tls = true;
+
+        /* msbClientChangeURL(test_var_msbClient, test_var_websocketAdress, test_var_websocketAdress, true, NULL, NULL, NULL); mit Origin */
+        msbClientChangeURL(test_var_msbClient, test_var_websocketAdress, NULL, tls, NULL, NULL, NULL);
         test_var_msbClient->nopoll_debug = true;
 
         msbClientGenerateSockJSPath(test_var_msbClient);
