@@ -70,13 +70,13 @@ You must provide
 
 msbClient* msbClientNewClientURL(char* url, char* service_uuid, char* service_token, char* sclass, char* service_name, char* service_description, bool tls, char* client_cert, char* client_key, char* ca_cert);
 
-msbClient* msbClient = msbClientNewClientURL( "ws://10.3.2.123:8085", UUID, TOKEN, CLASS, NAME, DESCRIPTION, false, NULL, NULL, NULL)
+msbClient* msbClient = msbClientNewClientURL( "ws://10.3.2.123:8085", NULL, UUID, TOKEN, CLASS, NAME, DESCRIPTION, false, NULL, NULL, NULL)
 
 msbClient* msbClientNewClient(bool ipv6, char* address, char* port, char* hostname, char* path,  
 							   char* service_uuid, char* service_token, char* sclass, char* service_name, char* service_description,
 							   bool tls, char* client_cert, char* client_key, char* ca_cert);  
 
-msbClient* msbClient = msbClientNewClientURL( false, "10.3.2.123", "8085", NULL, NULL, UUID, TOKEN, CLASS, NAME, DESCRIPTION, false, NULL, NULL, NULL)
+msbClient* msbClient = msbClientNewClient( false, "10.3.2.123", "8085", NULL, NULL, NULL, UUID, TOKEN, CLASS, NAME, DESCRIPTION, false, NULL, NULL, NULL)
 ```
 
 ## Configuring the client
