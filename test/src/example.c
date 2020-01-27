@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "libMsbClientC.h"
+#include "MsbClientC.h"
 #include <string.h>
 
 #define UUID "dba"

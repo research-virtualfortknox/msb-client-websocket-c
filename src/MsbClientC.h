@@ -554,6 +554,18 @@ void msbClientChangeURL(msbClient* client, char* url, char* origin, bool tls, ch
 void msbClientChangeAddress(msbClient* client, bool ipv6, char* address, char* port, char* hostname, char* path, char* origin, bool tls, char* client_cert, char* client_key, char* ca_cert);
 
 /**
+ * @brief Change the self description of a client
+ *
+ * @param client Pointer to Msb client
+ * @param uuid Service UUID
+ * @param token Service token
+ * @param service_class Service class ("Application" or "Smart Object")
+ * @param name Service name
+ * @param description Service description
+ */
+void msbClientChangeSelfDescription(msbClient* client, char* uuid, char* token, char* service_class, char* name, char* description);
+
+/**
  * @brief Use a SockJS-compatible path when connecting
  *
  * @param client Pointer to Msb client

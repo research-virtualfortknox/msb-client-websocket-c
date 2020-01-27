@@ -599,7 +599,7 @@ void msbClientPublish(msbClient* client, char* eId, MessagePriority mp, void* da
                 return;
             }
 
-            int i;
+            size_t i;
             i = 0;
 
             dataJ = json_object_new_array();
@@ -607,29 +607,29 @@ void msbClientPublish(msbClient* client, char* eId, MessagePriority mp, void* da
                 case MSB_INTEGER:
                     if (ev->array_subformat == MSB_INT32) {
                         int32_t (*arr_p)[arr_l] = data;
-                        for (; i < arr_l; i++) json_object_array_add(dataJ, json_object_new_int((*arr_p)[i]));
+                        for (; i < arr_l; ++i) json_object_array_add(dataJ, json_object_new_int((*arr_p)[i]));
                     } else if (ev->array_subformat == MSB_INT64) {
                         int64_t (*arr_p)[arr_l] = data;
-                        for (; i < arr_l; i++) json_object_array_add(dataJ, json_object_new_int64((*arr_p)[i]));
+                        for (; i < arr_l; ++i) json_object_array_add(dataJ, json_object_new_int64((*arr_p)[i]));
                     }
                     break;
                 case MSB_NUMBER:
                     if (ev->format == MSB_FLOAT || ev->format == MSB_DOUBLE) {
                         double (*arr_p)[arr_l] = data;
-                        for (; i < arr_l; i++) json_object_array_add(dataJ, json_object_new_double((*arr_p)[i]));
+                        for (; i < arr_l; ++i) json_object_array_add(dataJ, json_object_new_double((*arr_p)[i]));
                     } else if (ev->format == MSB_BYTE) {
                         int32_t (*arr_p)[arr_l] = data;
-                        for (; i < arr_l; i++) json_object_array_add(dataJ, json_object_new_int((*arr_p)[i]));
+                        for (; i < arr_l; ++i) json_object_array_add(dataJ, json_object_new_int((*arr_p)[i]));
                     }
                     break;
                 case MSB_BOOL: {
                     json_bool (*arr_p)[arr_l] = data;
-                    for (; i < arr_l; i++) json_object_array_add(dataJ, json_object_new_boolean((*arr_p)[i]));
+                    for (; i < arr_l; ++i) json_object_array_add(dataJ, json_object_new_boolean((*arr_p)[i]));
                 }
                     break;
                 case MSB_STRING: {
                     char* (*arr_p)[arr_l] = data;
-                    for (; i < arr_l; i++) json_object_array_add(dataJ, json_object_new_string((*arr_p)[i]));
+                    for (; i < arr_l; ++i) json_object_array_add(dataJ, json_object_new_string((*arr_p)[i]));
                 }
                     break;
                 default:
@@ -1099,7 +1099,25 @@ void msbClientChangeAddress(msbClient* client, bool ipv6, char* address, char* p
 
     client->websocketData = wsDataConstr(ipv6, address, port, hostname, path, origin, tls, client_cert,
                                          client_key, ca_cert, client->debugFunction);
+}
 
+#define if_free_duplicate(former, newer)            \
+    if(former != NULL && newer != NULL){            \
+        if(strcpy(former, newer)){                  \
+            free(former);                           \
+            former = string_duplicate(newer);       \
+        }                                           \
+    }
+
+void msbClientChangeSelfDescription(msbClient* client, char* uuid, char* token, char* service_class, char* name, char* description){
+
+    if (client == NULL) return;
+
+    if_free_duplicate(client->msbObjectData->objectInfo.service_uuid, uuid);
+    if_free_duplicate(client->msbObjectData->objectInfo.service_token, token);
+    if_free_duplicate(client->msbObjectData->objectInfo.service_class, service_class);
+    if_free_duplicate(client->msbObjectData->objectInfo.service_name, name);
+    if_free_duplicate(client->msbObjectData->objectInfo.service_description, description);
 }
 
 void msbClientUseSockJSPath(msbClient* client, char* serverId, char* sessionId, char* transport) {
