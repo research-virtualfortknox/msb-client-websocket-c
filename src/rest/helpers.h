@@ -128,6 +128,7 @@ static inline int gettimeofday(struct timeval * tp, struct timezone * tzp)
 
 	tp->tv_sec = (long)((time - EPOCH) / 10000000L);
 	tp->tv_usec = (long)(system_time.wMilliseconds * 1000);
+
 	return 0;
 }
 #endif
@@ -145,8 +146,12 @@ static inline void getDateTime(char buffer[]) {
 	}
 
 	tm_info = localtime(&tv.tv_sec);
-	strftime(buffer, 26, "%Y-%m-%dT%H:%M:%S", tm_info);
-	sprintf(buffer,"%s.%03li", buffer, millisec);
+	strftime(buffer, 30, "%Y-%m-%dT%H:%M:%S:::::%z", tm_info);
+	sprintf(&buffer[19], ".%03li", millisec);
+	buffer[23] = buffer[24];
+	buffer[24] = buffer[25];
+	buffer[25] = buffer[26];
+	buffer[26] = ':';
 }
 
 #endif /* SRC_HELPERS_H_ */

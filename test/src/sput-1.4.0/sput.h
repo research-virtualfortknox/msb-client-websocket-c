@@ -109,7 +109,7 @@ extern "C" {
         unsigned long nok;
 
         struct sput_time time;
-        char timestamp[32];
+        char timestamp[30];
 
         struct sput_test* testsZgr;
         unsigned long tests;

@@ -514,7 +514,7 @@ dataJ = NULL;
 json_object_object_add(root, "eventId", json_object_new_string(ev->eventId));\
 json_object_object_add(root, "uuid", json_object_new_string(client->msbObjectData->objectInfo.service_uuid));\
 json_object_object_add(root, "priority", json_object_new_int(mp));\
-char tBuff[26];\
+char tBuff[30] = {0};\
 getDateTime(tBuff);\
 json_object_object_add(root, "postDate", json_object_new_string(tBuff));
 
@@ -625,12 +625,12 @@ void msbClientPublish(msbClient* client, char* eId, MessagePriority mp, void* da
                 case MSB_BOOL: {
                     json_bool (*arr_p)[arr_l] = data;
                     for (; i < arr_l; ++i) json_object_array_add(dataJ, json_object_new_boolean((*arr_p)[i]));
-                }
+                    }
                     break;
                 case MSB_STRING: {
                     char* (*arr_p)[arr_l] = data;
                     for (; i < arr_l; ++i) json_object_array_add(dataJ, json_object_new_string((*arr_p)[i]));
-                }
+                    }
                     break;
                 default:
                     break;
