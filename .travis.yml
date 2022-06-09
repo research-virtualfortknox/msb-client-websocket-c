@@ -7,12 +7,14 @@ env:
     - TESTENV_BROKER_URL=https://ws.15xr.msb.oss.cell.vfk.fraunhofer.de/
     - TESTENV_SO_URL=https://so.15xr.msb.oss.cell.vfk.fraunhofer.de/
     - TESTENV_FLOW_URL=https://flow.15xr.msb.oss.cell.vfk.fraunhofer.de/
+    - TESTENV_OWNER_UUID 7c328ad1-cea5-410e-8dd8-6c7ca5a2e4f5
+    - TESTENV_SERVICE_UUID = 45ff42b7-9467-4c1d-9472-263fa96e22ba
 
 install:
   - ./c_client_prepare_machine.sh -p /opt/ci-vfk
   - ./c_client_build_cmake.sh -v 1.5.0
 
-script: ./test/cmake-build-debug/MsbClientC_Test --tests -w TESTENV_BROKER_URL -r_sm TESTENV_SO_URL -r_int TESTENV_FLOW_URL
+script: ./test/cmake-build-debug/MsbClientC_Test --tests -w TESTENV_BROKER_URL -r_sm TESTENV_SO_URL -r_int TESTENV_FLOW_URL -uuid_owner TESTENV_OWNER_UUID -uuid_service TESTENV_SERVICE_UUID
 after_success:
   - ./c_client_get_coverage.sh
   - bash <(curl -s https://codecov.io/bash) -f test/cmake-build-debug/CMakeFiles/MsbClientC_Test.dir/src/ex_test2.info -t c554faab-db78-41a2-be1f-18ecd1851568
