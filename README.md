@@ -8,7 +8,7 @@
 
 # MSB websocket client library for C and C++
 
-[![Build Status](https://travis-ci.org/research-virtualfortknox/msb-client-websocket-c.svg?branch=master)](https://travis-ci.org/research-virtualfortknox/msb-client-websocket-c) [![codecov](https://codecov.io/gh/research-virtualfortknox/msb-client-websocket-c/branch/master/graph/badge.svg)](https://codecov.io/gh/research-virtualfortknox/msb-client-websocket-c)
+[![Build Status](https://app.travis-ci.com/research-virtualfortknox/msb-client-websocket-c.svg?branch=master)](https://app.travis-ci.com/research-virtualfortknox/msb-client-websocket-c)[![codecov](https://codecov.io/gh/research-virtualfortknox/msb-client-websocket-c/branch/master/graph/badge.svg)](https://codecov.io/gh/research-virtualfortknox/msb-client-websocket-c)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fresearch-virtualfortknox%2Fmsb-client-websocket-c.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fresearch-virtualfortknox%2Fmsb-client-websocket-c?ref=badge_shield)
 
 **Compatibility Matrix**
