@@ -41,6 +41,53 @@ int writeDebug(const char* format, ... ){
     return done;
 }
 
+// Replace function from https://stackoverflow.com/questions/779875/what-function-is-to-replace-a-substring-from-a-string-in-c
+char *str_replace(char *orig, char *rep, char *with) {
+    char *result; // the return string
+    char *ins;    // the next insert point
+    char *tmp;    // varies
+    int len_rep;  // length of rep (the string to remove)
+    int len_with; // length of with (the string to replace rep with)
+    int len_front; // distance between rep and end of last rep
+    int count;    // number of replacements
+
+    // sanity checks and initialization
+    if (!orig || !rep)
+        return NULL;
+    len_rep = strlen(rep);
+    if (len_rep == 0)
+        return NULL; // empty rep causes infinite loop during count
+    if (!with)
+        with = "";
+    len_with = strlen(with);
+
+    // count the number of replacements needed
+    ins = orig;
+    for (count = 0; tmp = strstr(ins, rep); ++count) {
+        ins = tmp + len_rep;
+    }
+
+    tmp = result = malloc(strlen(orig) + (len_with - len_rep) * count + 1);
+
+    if (!result)
+        return NULL;
+
+    // first time through the loop, all the variable are set correctly
+    // from here on,
+    //    tmp points to the end of the result string
+    //    ins points to the next occurrence of rep in orig
+    //    orig points to the remainder of orig after "end of rep"
+    while (count--) {
+        ins = strstr(orig, rep);
+        len_front = ins - orig;
+        tmp = strncpy(tmp, orig, len_front) + len_front;
+        tmp = strcpy(tmp, with) + len_with;
+        orig += len_front + len_rep; // move to next "end of rep"
+    }
+    strcpy(tmp, orig);
+    return result;
+}
+
 void test_Function(void* client, void* inp, void* context){
     json_object* obj = json_object_object_get((json_object*)inp, "functionParameters"); //nötig, wenn der gesamte Funktionsaufruf durchgeleitet wird. Ist FwdCompleteFunctionCall nicht aktiv, reicht json_object* obj = (json_object*)inp;
 
@@ -110,6 +157,7 @@ msbClient* test_var_msbClient = NULL;
 static char* test_var_websocketAdress;
 static char* test_var_restAddress_smMgmt;
 static char* test_var_restAddress_intMgmt;
+static char* test_var_ownerUUID;
 
 static void test_helper_einfl(){
     list_list* ptr;
@@ -817,12 +865,49 @@ static void test_create_integration_flow(){
         strcpy(url, test_var_restAddress_intMgmt);
         strcat(url, "/integrationFlow/create");
 
+        char* prep_integration_flow_owner = NULL;
+        char* prep_integration_flow_uuid1 = NULL;
+        char* prep_integration_flow_uuid2 = NULL;
+
+        prep_integration_flow_owner = str_replace((char*)integration_flow, "%%%OwnerUUID%%%", test_var_ownerUUID);
+        if (prep_integration_flow_owner == NULL)
+        {
+            prep_integration_flow_owner = (char*)integration_flow;
+        }
+        
+        prep_integration_flow_uuid1 = str_replace((char*)prep_integration_flow_owner, "%%%Service1UUID%%%", test_var_service1UUID);
+        if (prep_integration_flow_uuid1 == NULL)
+        {
+            prep_integration_flow_uuid1 = (char*)prep_integration_flow_owner;
+        }
+
+        prep_integration_flow_uuid2 = str_replace((char*)prep_integration_flow_uuid1, "%%%Service2UUID%%%", test_var_service2UUID);
+        if (prep_integration_flow_uuid2 == NULL)
+        {
+            prep_integration_flow_uuid2 = (char*)prep_integration_flow_uuid1;
+        }
+
         int i = 0;
         for(; i < 3 && r != 201; ++i){
-            //r = rest_post(url, tmp, &post, "accept: application/json", "Content-Type: application/json", "TEST: create_integration_flow");
-            r = rest_post(url, (char*)integration_flow, &post, "accept: application/json", "Content-Type: application/json", "TEST: create_integration_flow");
+            //r = rest_post(url, tmp, &post, "accept: application/json", "Content-Type: application/json", "TEST: create_integration_flow");            
+            //r = rest_post(url, (char*)integration_flow, &post, "accept: application/json", "Content-Type: application/json", "TEST: create_integration_flow");
+            r = rest_post(url, (char*)prep_integration_flow_uuid2, &post, "accept: application/json", "Content-Type: application/json", "TEST: create_integration_flow");
+
             if(r != 201)
                 sleep(5);
+        }
+
+        if ((char*)prep_integration_flow_uuid2 != NULL && (char*)prep_integration_flow_uuid2 != (char*)prep_integration_flow_uuid1)
+        {
+            free(prep_integration_flow_uuid2);
+        }
+        if ((char*)prep_integration_flow_uuid1 != NULL && (char*)prep_integration_flow_uuid2 != (char*)prep_integration_flow_owner)
+        {
+            free(prep_integration_flow_uuid1);
+        }
+        if ((char*)prep_integration_flow_owner != NULL && (char*)prep_integration_flow_owner != (char*)integration_flow)
+        {
+            free(prep_integration_flow_owner);
         }
 
         if(r == 201){
@@ -943,7 +1028,7 @@ static void test_delete_client(){
 
 }
 
-int test(bool unit_tests, bool integration_tests, char* websocketAdress, char* restAddress_smMgmt, char* restAddress_intMgmt){
+int test(bool unit_tests, bool integration_tests, char* websocketAdress, char* restAddress_smMgmt, char* restAddress_intMgmt, char* ownerUUID, char* serviceUUID){
 
     if(!unit_tests && !integration_tests){
         printf("No tests to do. Aborting.\n");
@@ -953,6 +1038,8 @@ int test(bool unit_tests, bool integration_tests, char* websocketAdress, char* r
     test_var_websocketAdress = websocketAdress;
     test_var_restAddress_smMgmt = restAddress_smMgmt;
     test_var_restAddress_intMgmt = restAddress_intMgmt;
+    test_var_ownerUUID = ownerUUID;
+    test_var_UUID = serviceUUID;
 
     debug_fPtr = fopen(debug_fName, "w");
 
@@ -1005,7 +1092,7 @@ int test(bool unit_tests, bool integration_tests, char* websocketAdress, char* r
 
         sleep(3);
 
-        sput_run_test(test_verify_client);
+        //sput_run_test(test_verify_client);
         sput_run_test(test_create_integration_flow);
         sput_run_test(test_activate_integration_flow);
         sput_run_test(test_client_registration);

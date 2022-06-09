@@ -38,11 +38,11 @@
 
 int main(int argc, char **argv){
 
-	if(argc < 4){
+	if(argc < 7){
 		printf("Missing arguments.\n");
 		printf("Unit and integration tests:\n");
-		printf("Either pass addresses using environment variables: ./MsbClientCTest --tests -w VAR_NAME_WEBSOCKET_INTERFACE -r_sm VAR_NAME_SMOBJ_MGMT -r_int VAR_NAME_INTFLOW_MGMT\n");
-		printf("Or pass the addresses directly: ./MsbClientCTest --tests -w_d ADDRESS_WEBSOCKET_INTERFACE -r_sm_d ADDRESS_SMOBJ_MGMT -r_int_d ADDRESS_INTFLOW_MGMT\n");
+		printf("Either pass addresses using environment variables: ./MsbClientCTest --tests -w VAR_NAME_WEBSOCKET_INTERFACE -r_sm VAR_NAME_SMOBJ_MGMT -r_int VAR_NAME_INTFLOW_MGMT -uuid_owner VAR_NAME_UUID_OWNER -uuid_service VAR_NAME_UUID_SERVICE\n");
+		printf("Or pass the addresses directly: ./MsbClientCTest --tests -w_d ADDRESS_WEBSOCKET_INTERFACE -r_sm_d ADDRESS_SMOBJ_MGMT -r_int_d ADDRESS_INTFLOW_MGMT -uuid_owner_d UUID_OWNER -uuid_service_d UUID_SERVICE\n");
 		printf("Only unit tests:\n");
 		printf("With environment variables: ./MsbClientCTest --unit_tests -w VAR_NAME_WEBSOCKET_INTERFACE\n");
 		printf("Directly passed addresses: ./MsbClientCTest --unit_tests -w_d ADDRESS_WEBSOCKET_INTERFACE\n");
@@ -56,15 +56,22 @@ int main(int argc, char **argv){
 	char* wsAdr = NULL;
 	char* restAdr_sm = NULL;
 	char* restAdr_int = NULL;
+	char* ownerUUID = NULL;
+	char* serviceUUID = NULL;
 
 	int i = 2;
 	for(; i < argc; ++i){
 		cmdlineparamvar(argv[i], "-w", wsAdr, getenv(argv[i+1]));
 		cmdlineparamvar(argv[i], "-r_sm", restAdr_sm, getenv(argv[i+1]));
 		cmdlineparamvar(argv[i], "-r_int", restAdr_int, getenv(argv[i+1]));
+		cmdlineparamvar(argv[i], "-uuid_owner", ownerUUID, getenv(argv[i+1]));
+		cmdlineparamvar(argv[i], "-uuid_service", serviceUUID, getenv(argv[i+1]));
+
 		cmdlineparamvar(argv[i], "-w_d", wsAdr, argv[i+1]);
 		cmdlineparamvar(argv[i], "-r_sm_d", restAdr_sm, argv[i+1]);
 		cmdlineparamvar(argv[i], "-r_int_d", restAdr_int, argv[i+1]);
+		cmdlineparamvar(argv[i], "-uuid_owner_d", ownerUUID, argv[i+1]);
+		cmdlineparamvar(argv[i], "-uuid_service_d", serviceUUID, argv[i+1]);
 	}
 
 	bool unit_tests = strcmp(argv[1], "--tests") == 0 || strcmp(argv[1], "--unit_tests") == 0;
@@ -83,6 +90,14 @@ int main(int argc, char **argv){
 			printf("Environment variable(s) for address of REST interface of integration flow management missing.\n");
 			return -1;
 		}
+		if(!ownerUUID){
+			printf("Environment variable(s) for owner UUID missing.\n");
+			return -1;
+		}
+		if(!serviceUUID){
+			printf("Environment variable(s) for UUID of test service missing.\n");
+			return -1;
+		}
 	}else if(unit_tests){
 		if(!wsAdr){
 			printf("Environment variable(s) for address of websocket interface missing.\n");
@@ -90,5 +105,5 @@ int main(int argc, char **argv){
 		}
 	}
 	
-	return test(unit_tests, integration_tests, wsAdr, restAdr_sm, restAdr_int);
+	return test(unit_tests, integration_tests, wsAdr, restAdr_sm, restAdr_int, ownerUUID, serviceUUID);
 }

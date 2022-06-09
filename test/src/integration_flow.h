@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019 D. Breunig, Fraunhofer IPA
+ * Copyright 2022 D. Breunig, Fraunhofer IPA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
 * @file integration_flow.h
 * @author D. Breunig FhG IPA
-* @date 24 July 2019
+* @date 9 June 2022
 * @brief Integration flow definition for testing
 */
 
@@ -28,7 +28,7 @@ const char* integration_flow = "{"
 "   \"@id\":1,"
 "   \"name\": \"integration_flow\","
 "   \"description\": \"\","
-"   \"ownerUuid\": \"7c328ad1-cea5-410e-8dd8-6c7ca5a2e4f5\","
+"   \"ownerUuid\": \"%%%OwnerUUID%%%\","
 "   \"transitions\":["
 "      {"
 "         \"@id\":1,"
@@ -44,7 +44,7 @@ const char* integration_flow = "{"
 "                  \"eventId\":\"Ev2\","
 "                  \"service\":{"
 "                     \"@id\":1,"
-"                     \"uUID\": \"a209efb9-af3f-4d93-bad4-05215a983164\","
+"                     \"uUID\": \"%%%Service1UUID%%%\","
 "                     \"name\": \"Unit_Test_C-Client\","
 "                     \"type\": \"SMART_OBJECT\","
 "                     \"events\":[1],"
@@ -71,7 +71,7 @@ const char* integration_flow = "{"
 "                              \"functionCalls\":[1],"
 "                              \"service\":{"
 "                                 \"@id\":2,"
-"                                 \"uUID\": \"a209efb9-af3f-4d93-bad4-05215a983164\","
+"                                 \"uUID\": \"%%%Service2UUID%%%\","
 "                                 \"name\": \"Unit_Test_C-Client\","
 "                                 \"type\": \"SMART_OBJECT\","
 "                                 \"events\":[],"
