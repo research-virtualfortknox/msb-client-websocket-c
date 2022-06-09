@@ -875,13 +875,13 @@ static void test_create_integration_flow(){
             prep_integration_flow_owner = (char*)integration_flow;
         }
         
-        prep_integration_flow_uuid1 = str_replace((char*)prep_integration_flow_owner, "%%%Service1UUID%%%", test_var_service1UUID);
+        prep_integration_flow_uuid1 = str_replace((char*)prep_integration_flow_owner, "%%%Service1UUID%%%", test_var_UUID);
         if (prep_integration_flow_uuid1 == NULL)
         {
             prep_integration_flow_uuid1 = (char*)prep_integration_flow_owner;
         }
 
-        prep_integration_flow_uuid2 = str_replace((char*)prep_integration_flow_uuid1, "%%%Service2UUID%%%", test_var_service2UUID);
+        prep_integration_flow_uuid2 = str_replace((char*)prep_integration_flow_uuid1, "%%%Service2UUID%%%", test_var_UUID);
         if (prep_integration_flow_uuid2 == NULL)
         {
             prep_integration_flow_uuid2 = (char*)prep_integration_flow_uuid1;
