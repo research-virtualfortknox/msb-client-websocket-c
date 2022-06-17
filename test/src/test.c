@@ -939,9 +939,10 @@ static void test_activate_integration_flow(){
     strcpy(url, test_var_restAddress_intMgmt);
     strcat(url, "/integrationFlow/");
 
-    char str[12] = {0};
-    sprintf(str, "%d", test_var_integration_flow_id);
-    strcat(url, str);
+    //char str[12] = {0};
+    //sprintf(str, "%d", test_var_integration_flow_id);
+    //strcat(url, str);
+    strncat(url, test_var_integration_flow_uuid, sizeof(test_var_integration_flow_uuid));
 
     strcat(url, "/deploy");
 
@@ -995,13 +996,14 @@ static void test_delete_integration_flow(){
 
     int r = -1;
 
-    char str[256] = {0};
-    sprintf(str, "%d", test_var_integration_flow_id);
+    //char str[256] = {0};
+    //sprintf(str, "%d", test_var_integration_flow_id);
 
     char url[512] = {0};
     strcpy(url, test_var_restAddress_intMgmt);
     strcat(url, "/integrationFlow/");
-    strcat(url, str);
+    strncat(url, test_var_integration_flow_uuid, sizeof(test_var_integration_flow_uuid));
+    //strcat(url, str);
 
     int i = 0;
     for(; i < 3 && r != 200; ++i){
