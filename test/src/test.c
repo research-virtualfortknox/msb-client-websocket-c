@@ -103,6 +103,8 @@ static bool test_functionCall_callHappened = false;
 
 static int test_var_integration_flow_id = -1;
 
+static char test_var_integration_flow_uuid[36] = {0};
+
 void test_FunctionString(void* client, void* inp, void* context) {
     json_object* obj = json_object_object_get((json_object*) inp,
                                               "functionParameters"); //nötig, wenn der gesamte Funktionsaufruf durchgeleitet wird. Ist FwdCompleteFunctionCall nicht aktiv, reicht json_object* obj = (json_object*)inp;
@@ -914,16 +916,19 @@ static void test_create_integration_flow(){
             json_object* j_resp = json_tokener_parse(post);
 
             if(j_resp != NULL){
-                json_object* j_resp_i = json_object_object_get(j_resp, "id");
+                //json_object* j_resp_i = json_object_object_get(j_resp, "id");
+                //if(j_resp_i != NULL)
+                //    test_var_integration_flow_id = json_object_get_int(j_resp_i);
+                json_object* j_resp_i = json_object_object_get(j_resp, "uuid");
                 if(j_resp_i != NULL)
-                    test_var_integration_flow_id = json_object_get_int(j_resp_i);
+                    strncpy(test_var_integration_flow_uuid, json_object_get_string(j_resp_i), sizeof(test_var_integration_flow_uuid));
             }
         }
     //}
 
     sput_fail_unless(r == 201, "Integration flow created");
-    sput_fail_unless(test_var_integration_flow_id != -1, "Integration flow read");
-
+    //sput_fail_unless(test_var_integration_flow_id != -1, "Integration flow read");
+    sput_fail_unless(uuid_is_valid(test_var_integration_flow_uuid), "Integration flow could be read and has a valid UUID");
 }
 
 static void test_activate_integration_flow(){

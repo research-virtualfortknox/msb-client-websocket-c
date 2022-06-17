@@ -54,7 +54,7 @@ int rest_get(char* url, char** resp_body, char* comm){
 
         if(res != CURLE_OK) {
             //fprintf(stderr, "%s: get: curl_easy_perform() failed: %s\nurl %s", comm, curl_easy_strerror(res), url);
-            debugOutputFunction("%s: get: curl_easy_perform() failed: %s\nurl %s", comm, curl_easy_strerror(res), url);
+            debugOutputFunction("%s: get: curl_easy_perform() failed: %s\nurl %s\n", comm, curl_easy_strerror(res), url);
             return -1;
         }
 
@@ -93,7 +93,8 @@ int rest_put(char* url, char** resp_body, char* accept_header, char* comm){
 
         if(res != CURLE_OK) {
             //fprintf(stderr, "%s: put: curl_easy_perform() failed: %s\nurl %s", comm, curl_easy_strerror(res), url);
-            debugOutputFunction("%s: put: curl_easy_perform() failed: %s\nurl %s", comm, curl_easy_strerror(res), url);
+            debugOutputFunction("%s: put: curl_easy_perform() failed: %s\nurl %s\n", comm, curl_easy_strerror(res), url);
+            debugOutputFunction()
             return -1;
         }
 
@@ -133,7 +134,8 @@ int rest_post(char* url, char* post, char** resp_body, char* accept_header, char
 
         if(res != CURLE_OK) {
             //fprintf(stderr, "%s: post: curl_easy_perform() failed: %s\nurl %s", comm, curl_easy_strerror(res), url);
-            debugOutputFunction("%s: post: curl_easy_perform() failed: %s\nurl %s", comm, curl_easy_strerror(res), url);
+            debugOutputFunction("%s: post: curl_easy_perform() failed: %s\nurl %s\n", comm, curl_easy_strerror(res), url);
+            debugOutputFunction("%s: post: Post field: %s\n", comm, post);
             return -1;
         }
 
@@ -169,7 +171,7 @@ int rest_delete(char* url, char* comm){
 
         if(res != CURLE_OK) {
             //fprintf(stderr, "%s: delete: curl_easy_perform() failed: %s\nurl %s", comm, curl_easy_strerror(res), url);
-            debugOutputFunction("%s: delete: curl_easy_perform() failed: %s\nurl %s", comm, curl_easy_strerror(res), url);
+            debugOutputFunction("%s: delete: curl_easy_perform() failed: %s\nurl %s\n", comm, curl_easy_strerror(res), url);
             return -1;
         }
 
