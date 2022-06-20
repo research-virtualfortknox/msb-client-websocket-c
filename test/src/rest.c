@@ -94,7 +94,6 @@ int rest_put(char* url, char** resp_body, char* accept_header, char* comm){
         if(res != CURLE_OK) {
             //fprintf(stderr, "%s: put: curl_easy_perform() failed: %s\nurl %s", comm, curl_easy_strerror(res), url);
             debugOutputFunction("%s: put: curl_easy_perform() failed: %s\nurl %s\n", comm, curl_easy_strerror(res), url);
-            debugOutputFunction()
             return -1;
         }
 
