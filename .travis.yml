@@ -4,9 +4,9 @@ sudo: require
 
 env:
   global:
-    - TESTENV_BROKER_URL=https://ws.15xr.msb.oss.cell.vfk.fraunhofer.de/
-    - TESTENV_SO_URL=https://so.15xr.msb.oss.cell.vfk.fraunhofer.de/
-    - TESTENV_FLOW_URL=https://flow.15xr.msb.oss.cell.vfk.fraunhofer.de/
+    - TESTENV_BROKER_URL=https://ws.16xr.msb.oss.cell.vfk.fraunhofer.de/
+    - TESTENV_SO_URL=https://so.16xr.msb.oss.cell.vfk.fraunhofer.de/
+    - TESTENV_FLOW_URL=https://flow.16xr.msb.oss.cell.vfk.fraunhofer.de/
     - TESTENV_OWNER_UUID=7c328ad1-cea5-410e-8dd8-6c7ca5a2e4f5
     - TESTENV_SERVICE_UUID=45ff42b7-9467-4c1d-9472-263fa96e22ba
 
