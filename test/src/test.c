@@ -865,7 +865,7 @@ static void test_create_integration_flow(){
 
         char url[512] = {0};
         strcpy(url, test_var_restAddress_intMgmt);
-        strcat(url, "/integrationFlow/create");
+        strcat(url, "/integrationFlow/create?deploy=true");
 
         char* prep_integration_flow_owner = NULL;
         char* prep_integration_flow_uuid1 = NULL;
@@ -922,6 +922,12 @@ static void test_create_integration_flow(){
                 json_object* j_resp_i = json_object_object_get(j_resp, "uuid");
                 if(j_resp_i != NULL)
                     strncpy(test_var_integration_flow_uuid, json_object_get_string(j_resp_i), sizeof(test_var_integration_flow_uuid));
+                else
+                {
+                    j_resp_i = json_object_object_get(j_resp, "id");
+                    if(j_resp_i != NULL)
+                        test_var_integration_flow_id = json_object_get_int(j_resp_i);
+                }
             }
         }
     //}
@@ -996,15 +1002,18 @@ static void test_delete_integration_flow(){
 
     int r = -1;
 
-    //char str[256] = {0};
-    //sprintf(str, "%d", test_var_integration_flow_id);
-
     char url[512] = {0};
     strcpy(url, test_var_restAddress_intMgmt);
     strcat(url, "/integrationFlow/");
-    strncat(url, test_var_integration_flow_uuid, sizeof(test_var_integration_flow_uuid));
-    //strcat(url, str);
-
+    if (test_var_integration_flow_uuid[0] != 0)
+    {
+        strncat(url, test_var_integration_flow_uuid, sizeof(test_var_integration_flow_uuid));
+    } else {
+        char str[256] = {0};
+        sprintf(str, "%d", test_var_integration_flow_id);
+        strcat(url, str);
+    }
+    
     int i = 0;
     for(; i < 3 && r != 200; ++i){
         r = rest_delete(url, "TEST: delete_integration_flow");
@@ -1101,7 +1110,7 @@ int test(bool unit_tests, bool integration_tests, char* websocketAdress, char* r
 
         //sput_run_test(test_verify_client);
         sput_run_test(test_create_integration_flow);
-        sput_run_test(test_activate_integration_flow);
+        //sput_run_test(test_activate_integration_flow);
         sput_run_test(test_client_registration);
         sput_run_test(test_publish_event);
         sput_run_test(test_stop_client);
