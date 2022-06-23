@@ -115,6 +115,7 @@ int rest_post(char* url, char* post, char** resp_body, char* accept_header, char
     if(curl) {
         curl_easy_setopt(curl, CURLOPT_URL, url);
         struct curl_slist *headers = NULL;
+        headers = curl_slist_append(headers, "Expect:");
         headers = curl_slist_append(headers, accept_header);
         headers = curl_slist_append(headers, content_header);
         res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);

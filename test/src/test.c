@@ -828,7 +828,8 @@ static void test_verify_client(){
 
     char url[512] = {0};
     strcpy(url, test_var_restAddress_smMgmt);
-    strcat(url, "/smartobject/verify/7c328ad1-cea5-410e-8dd8-6c7ca5a2e4f5");
+    strcat(url, "/smartobject/verify/");
+    strcat(url, test_var_ownerUUID);
 
     int r = -1, i = 0;
 
@@ -1108,7 +1109,7 @@ int test(bool unit_tests, bool integration_tests, char* websocketAdress, char* r
 
         sleep(3);
 
-        //sput_run_test(test_verify_client);
+        sput_run_test(test_verify_client);
         sput_run_test(test_create_integration_flow);
         //sput_run_test(test_activate_integration_flow);
         sput_run_test(test_client_registration);
