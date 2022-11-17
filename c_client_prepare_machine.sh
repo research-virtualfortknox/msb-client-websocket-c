@@ -98,7 +98,7 @@ make && sudo make install
 
 cd ..
 
-git clone https://gitlab.gnome.org/GNOME/libxml2.git
+git clone https://github.com/GNOME/libxml2.git
 cd libxml2
 git checkout tags/v2.9.8
 sh autogen.sh
